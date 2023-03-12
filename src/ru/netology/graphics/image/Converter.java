@@ -11,6 +11,8 @@ public class Converter implements TextGraphicsConverter {
     public String convert(String url) throws IOException, BadImageSizeException {
         //Скачиваем картинку и сохраняем в переменную
         BufferedImage img = ImageIO.read(new URL(url));
+        ColorSchema schema = new ColorSchema();
+        char[][] newImg = new char[img.getHeight()][img.getWidth()];//новое изображение
         try {
 
             //TODO преобразование изображения в оттенки серого
@@ -22,10 +24,9 @@ public class Converter implements TextGraphicsConverter {
                     int blue = (int) (pix.getBlue() * 0.114);
 
                     Color newColor = new Color(red + green + blue, red + green + blue, red + green + blue);
-//                    newColor.getAlpha() получаем значение интенсивности пикселя, в зависимости от него мы меняем его на определенный символ
-
-                    img.setRGB(j, i, newColor.getRGB());
-
+                    char c = schema.convert(newColor.getAlpha()); //создали переменную в которой хранится новый символ после замены
+                    newImg[i][j] = c;//засовываем в двумерный массив
+//                    img.setRGB(j, i, newColor.getRGB()); Меняем изображение на серое
                 }
             }
         } catch (Exception e) {
