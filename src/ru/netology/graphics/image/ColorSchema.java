@@ -9,6 +9,9 @@ public class ColorSchema implements TextColorSchema{
     @Override
     public char convert(int color) {
         char[] arr = {'#', '$', '@', '%', '*', '+', '-', '\''};
+        if((color/31) - 1 < 0){
+            return arr[0];
+        } else
         return arr[(color/31) - 1];//возвращаем элемент подходящий для замены
     }
 }

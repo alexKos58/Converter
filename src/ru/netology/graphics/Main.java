@@ -15,7 +15,8 @@ public class Main {
         server.start(); // Запускаем
 
         // Или то же, но с выводом на экран:
-//        String url = "https://raw.githubusercontent.com/netology-code/java-diplom/main/pics/simple-test.png";
+//        String url = "https://sun9-74.userapi.com/impg/Dwqjd7JegD3So4Ogq21lLkgEz7sMtelbCdk3Iw/hCDByw_8CXE.jpg?size=690x338&quality=96&sign=c70d0cb30aa45f97672d54a74465ff70&type=album";
+////        String url = "https://raw.githubusercontent.com/netology-code/java-diplom/main/pics/simple-test.png";
 //        String imgTxt = converter.convert(url);
 //        System.out.println(imgTxt);
     }
