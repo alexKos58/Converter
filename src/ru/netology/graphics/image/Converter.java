@@ -7,6 +7,13 @@ import java.io.IOException;
 import java.net.URL;
 
 public class Converter implements TextGraphicsConverter {
+    /**
+     * Метод для конвертации изображения в текстовую графику
+     * @param url урл изображения
+     * @return Строка символов(сконвертированное изображение)
+     * @throws IOException
+     * @throws BadImageSizeException
+     */
     @Override
     public String convert(String url) throws IOException, BadImageSizeException {
         //Скачиваем картинку и сохраняем в переменную
