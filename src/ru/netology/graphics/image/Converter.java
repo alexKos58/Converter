@@ -12,7 +12,7 @@ public class Converter implements TextGraphicsConverter {
         //Скачиваем картинку и сохраняем в переменную
         BufferedImage img = ImageIO.read(new URL(url));
         ColorSchema schema = new ColorSchema();
-        char[][] newImg = new char[img.getHeight()][img.getWidth()];//новое изображение
+        String result = "";
         try {
 
             //TODO преобразование изображения в оттенки серого
@@ -23,16 +23,16 @@ public class Converter implements TextGraphicsConverter {
                     int green = (int) (pix.getGreen() * 0.587);
                     int blue = (int) (pix.getBlue() * 0.114);
 
-                    Color newColor = new Color(red + green + blue, red + green + blue, red + green + blue);
-                    char c = schema.convert(newColor.getAlpha()); //создали переменную в которой хранится новый символ после замены
-                    newImg[i][j] = c;//засовываем в двумерный массив
-//                    img.setRGB(j, i, newColor.getRGB()); Меняем изображение на серое
+                    char c = schema.convert(red+green+blue); //создали переменную в которой хранится новый символ после замены
+                    result += c;
                 }
+                result += "\n";
             }
         } catch (Exception e) {
+            System.out.println("Ошибка при конвертации");
         }
 
-        return null;
+        return result;
     }
 
     @Override
