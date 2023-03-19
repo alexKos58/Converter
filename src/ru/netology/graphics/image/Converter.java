@@ -3,17 +3,15 @@ package ru.netology.graphics.image;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.awt.image.WritableRaster;
 import java.io.IOException;
 import java.net.URL;
 
 public class Converter implements TextGraphicsConverter {
 
-    private final BufferedImage img;
     private double ratio;
-
-    public Converter(BufferedImage img) {
-        this.img = img;
-    }
+    private int maxWidth;
+    private int maxHeight;
 
     /**
      * Метод для конвертации изображения в текстовую графику
@@ -27,13 +25,25 @@ public class Converter implements TextGraphicsConverter {
     public String convert(String url) throws IOException, BadImageSizeException {
         //Скачиваем картинку и сохраняем в переменную
         BufferedImage img = ImageIO.read(new URL(url));
-        double currentWidth = img.getWidth();
-        double currentHeight = img.getHeight();
-        double currentRatio = (currentWidth / currentHeight);
+        int currentWidth = img.getWidth();
+        int currentHeight = img.getHeight();
+        int currentRatio = (currentWidth / currentHeight);
 
         //Проверка на максимальное соотношение сторон
-        if(currentRatio > ratio){
-            throw new BadImageSizeException(currentWidth, currentHeight);
+        if (currentRatio > ratio) {
+            throw new BadImageSizeException(currentRatio, ratio);
+        }
+        int newWidth = currentWidth;
+        int newHeight = currentHeight;
+        //проверка на макс высоту
+        if (currentWidth > maxWidth) {
+            newWidth = maxWidth;
+            newHeight = (maxWidth / currentRatio);
+        }
+        //проверка на макс ширину
+        if (currentHeight > maxHeight) {
+            newHeight = maxHeight;
+            newWidth = (newHeight * currentRatio);
         }
 
         ColorSchema schema = new ColorSchema();
@@ -41,16 +51,22 @@ public class Converter implements TextGraphicsConverter {
         final double k_red = 0.299;
         final double k_green = 0.587;
         final double k_blue = 0.114;
+        Image scaledImage = img.getScaledInstance(newWidth, newHeight, BufferedImage.SCALE_SMOOTH);
+        BufferedImage bwImg = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_BYTE_GRAY);
+        Graphics2D graphics = bwImg.createGraphics();
+        graphics.drawImage(scaledImage, 0, 0, null);
+        WritableRaster bwRaster = bwImg.getRaster();
+
         try {
             //TODO преобразование изображения в оттенки серого
-            for (int i = 0; i < img.getHeight(); i++) {
-                for (int j = 0; j < img.getWidth(); j++) {
-                    Color pix = new Color(img.getRGB(j, i));
-                    int red = (int) (pix.getRed() * k_red);
-                    int green = (int) (pix.getGreen() * k_green);
-                    int blue = (int) (pix.getBlue() * k_blue);
-
-                    char c = schema.convert(red + green + blue); //создали переменную в которой хранится новый символ после замены
+            for (int i = 0; i < currentHeight; i++) {
+                for (int j = 0; j < currentWidth; j++) {
+//                    Color pix = new Color(bwImg.getRGB(j, i));
+//                    int red = (int) (pix.getRed() * k_red);
+//                    int green = (int) (pix.getGreen() * k_green);
+//                    int blue = (int) (pix.getBlue() * k_blue);
+                    int color = bwRaster.getPixel(j, i, new int[3])[0];
+                    char c = schema.convert(color); //создали переменную в которой хранится новый символ после замены
                     result.append(c);
                 }
                 result.append("\n");
@@ -64,21 +80,22 @@ public class Converter implements TextGraphicsConverter {
 
     @Override
     public void setMaxWidth(int width) {
-
+        this.maxWidth = width;
     }
 
     @Override
     public void setMaxHeight(int height) {
-
+        this.maxHeight = height;
     }
 
     @Override
     public void setMaxRatio(double maxRatio) {
-        ratio = maxRatio;
+        this.ratio = maxRatio;
     }
 
     @Override
     public void setTextColorSchema(TextColorSchema schema) {
+
 
     }
 }
