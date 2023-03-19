@@ -48,9 +48,6 @@ public class Converter implements TextGraphicsConverter {
 
         ColorSchema schema = new ColorSchema();
         StringBuilder result = new StringBuilder();
-        final double k_red = 0.299;
-        final double k_green = 0.587;
-        final double k_blue = 0.114;
         Image scaledImage = img.getScaledInstance(newWidth, newHeight, BufferedImage.SCALE_SMOOTH);
         BufferedImage bwImg = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_BYTE_GRAY);
         Graphics2D graphics = bwImg.createGraphics();
@@ -58,13 +55,8 @@ public class Converter implements TextGraphicsConverter {
         WritableRaster bwRaster = bwImg.getRaster();
 
         try {
-            //TODO преобразование изображения в оттенки серого
             for (int i = 0; i < currentHeight; i++) {
                 for (int j = 0; j < currentWidth; j++) {
-//                    Color pix = new Color(bwImg.getRGB(j, i));
-//                    int red = (int) (pix.getRed() * k_red);
-//                    int green = (int) (pix.getGreen() * k_green);
-//                    int blue = (int) (pix.getBlue() * k_blue);
                     int color = bwRaster.getPixel(j, i, new int[3])[0];
                     char c = schema.convert(color); //создали переменную в которой хранится новый символ после замены
                     result.append(c);
