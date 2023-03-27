@@ -12,6 +12,7 @@ public class Converter implements TextGraphicsConverter {
     private double ratio;
     private int maxWidth;
     private int maxHeight;
+    private TextColorSchema schema = new ColorSchema();
 
     /**
      * Метод для конвертации изображения в текстовую графику
@@ -42,14 +43,13 @@ public class Converter implements TextGraphicsConverter {
         //проверка на макс высоту
         if (currentWidth > maxWidth) {
             newWidth = maxWidth;
-            newHeight = (maxWidth / currentRatio);
+            newHeight = (newWidth / currentRatio);
         } else if (currentHeight > maxHeight || newHeight > maxHeight) {
             newHeight = maxHeight;
             newWidth = (newHeight * currentRatio);
         }
 
 
-        ColorSchema schema = new ColorSchema();
         StringBuilder result = new StringBuilder();
         try {
             Image scaledImage = img.getScaledInstance(newWidth, newHeight, BufferedImage.SCALE_SMOOTH);
@@ -91,7 +91,6 @@ public class Converter implements TextGraphicsConverter {
 
     @Override
     public void setTextColorSchema(TextColorSchema schema) {
-
-
+        this.schema = schema;
     }
 }
