@@ -28,6 +28,10 @@ public class Converter implements TextGraphicsConverter {
         int currentWidth = img.getWidth();
         int currentHeight = img.getHeight();
         int currentRatio = (currentWidth / currentHeight);
+        if (currentWidth < currentHeight) {
+            currentRatio = (currentHeight / currentWidth);
+        }
+
 
         //Проверка на максимальное соотношение сторон
         if (currentRatio > ratio) {
@@ -48,14 +52,14 @@ public class Converter implements TextGraphicsConverter {
         ColorSchema schema = new ColorSchema();
         StringBuilder result = new StringBuilder();
         try {
-        Image scaledImage = img.getScaledInstance(newWidth, newHeight, BufferedImage.SCALE_SMOOTH);
-        BufferedImage bwImg = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_BYTE_GRAY);
-        Graphics2D graphics = bwImg.createGraphics();
-        graphics.drawImage(scaledImage, 0, 0, null);
-        WritableRaster bwRaster = bwImg.getRaster();
+            Image scaledImage = img.getScaledInstance(newWidth, newHeight, BufferedImage.SCALE_SMOOTH);
+            BufferedImage bwImg = new BufferedImage(newWidth, newHeight, BufferedImage.TYPE_BYTE_GRAY);
+            Graphics2D graphics = bwImg.createGraphics();
+            graphics.drawImage(scaledImage, 0, 0, null);
+            WritableRaster bwRaster = bwImg.getRaster();
 
 
-            for (int i = 0; i <  newHeight; i++) {
+            for (int i = 0; i < newHeight; i++) {
                 for (int j = 0; j < newWidth; j++) {
                     int color = bwRaster.getPixel(j, i, new int[3])[0];
                     char c = schema.convert(color); //создали переменную в которой хранится новый символ после замены
